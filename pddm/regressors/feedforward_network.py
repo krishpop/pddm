@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 def feedforward_network(inputStates, inputSize, outputSize, num_fc_layers,
@@ -27,28 +28,28 @@ def feedforward_network(inputStates, inputSize, outputSize, num_fc_layers,
         #vars
         intermediate_size = depth_fc_layers
         reuse = False
-        initializer = tf.contrib.layers.xavier_initializer(
-            uniform=False, seed=None, dtype=tf_datatype)
-        fc = tf.contrib.layers.fully_connected
+        initializer = tf.glorot_normal_initializer(
+            seed=None, dtype=tf_datatype)
+        fc = tf.layers.dense
 
         # make hidden layers
         for i in range(num_fc_layers):
             if i==0:
                 fc_i = fc(
                     inputState,
-                    num_outputs=intermediate_size,
-                    activation_fn=None,
-                    weights_initializer=initializer,
-                    biases_initializer=initializer,
+                    units=intermediate_size,
+                    activation=None,
+                    kernel_initializer=initializer,
+                    bias_initializer=initializer,
                     reuse=reuse,
                     trainable=True)
             else:
                 fc_i = fc(
                     h_i,
-                    num_outputs=intermediate_size,
-                    activation_fn=None,
-                    weights_initializer=initializer,
-                    biases_initializer=initializer,
+                    units=intermediate_size,
+                    activation=None,
+                    kernel_initializer=initializer,
+                    bias_initializer=initializer,
                     reuse=reuse,
                     trainable=True)
             h_i = tf.nn.relu(fc_i)
@@ -56,10 +57,10 @@ def feedforward_network(inputStates, inputSize, outputSize, num_fc_layers,
         # make output layer
         z = fc(
             h_i,
-            num_outputs=outputSize,
-            activation_fn=None,
-            weights_initializer=initializer,
-            biases_initializer=initializer,
+            units=outputSize,
+            activation=None,
+            kernel_initializer=initializer,
+            bias_initializer=initializer,
             reuse=reuse,
             trainable=True)
 

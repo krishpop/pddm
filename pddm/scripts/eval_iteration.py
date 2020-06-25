@@ -18,7 +18,8 @@ import numpy.random as npr
 import os
 import sys
 import argparse
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import traceback
 
 #my imports

@@ -16,7 +16,7 @@ import os
 os.environ["MKL_THREADING_LAYER"] = "GNU"
 import numpy as np
 import numpy.random as npr
-import tensorflow as tf
+
 import pickle
 import sys
 import argparse
@@ -34,6 +34,10 @@ from pddm.utils.data_structures import *
 from pddm.utils.convert_to_parser_args import convert_to_parser_args
 from pddm.utils import config_reader
 
+
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+
 SCRIPT_DIR = os.path.dirname(__file__)
 
 def run_job(args, save_dir=None):
@@ -41,7 +45,7 @@ def run_job(args, save_dir=None):
     # Continue training from an existing iteration
     if args.continue_run>-1:
         save_dir = os.path.join(SCRIPT_DIR, args.continue_run_filepath)
-
+    tf.disable_v2_behavior()
     tf.reset_default_graph()
     with tf.Session(config=get_gpu_config(args.use_gpu, args.gpu_frac)) as sess:
 
